@@ -1,6 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
 
-console.log(process.env.MONGO);
 export const mongo = new MongoClient(process.env.MONGO!);
 export const db = mongo.db();
 

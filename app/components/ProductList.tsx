@@ -38,7 +38,7 @@ export default function ProductList() {
             {products.map((product) => (
                 <li key={product.id} className="flex items-center justify-between bg-white p-4 rounded-md shadow">
                     <span>
-                        {product.name} - ${product.price.toFixed(2)}
+                        {product.name} - {product.price.toFixed(2)} RON
                     </span>
                     <div>
                         <Link href={`/dashboard/product/${product.id}`} className="text-blue-500 hover:text-blue-700 mr-2">

@@ -1,4 +1,7 @@
+"use client";
+
 import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 import { Trash } from "lucide-react";
 
 export function Delete({
@@ -6,11 +9,13 @@ export function Delete({
 }: {
     id: string
 }) {
+    const router = useRouter();
+
     async function handleDeleteProduct() {
         const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
 
         if (res.ok) {
-            revalidatePath("/dashboard");
+            router.refresh();
         }
     }
 

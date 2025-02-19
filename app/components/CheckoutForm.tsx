@@ -137,7 +137,7 @@ export default function CheckoutForm() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-10"
                 />
             </div>
-            <div className="font-bold text-xl mt-4">Total: ${total.toFixed(2)}</div>
+            <div className="font-bold text-xl mt-4">Total: {total.toFixed(2)} RON</div>
             <button
                 type="submit"
                 className="w-full bg-gray-900 text-white py-3 px-4 rounded-md hover:bg-gray-800 transition duration-300"

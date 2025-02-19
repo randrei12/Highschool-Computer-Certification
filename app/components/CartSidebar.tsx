@@ -36,7 +36,7 @@ export default function CartSidebar() {
                 />
                 <div className="ml-4 flex-grow">
                   <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                  <p className="text-gray-600">{item.price.toFixed(2)} RON</p>
                   <div className="flex items-center mt-2">
                     <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -63,7 +63,7 @@ export default function CartSidebar() {
         <div className="p-4 border-t">
           <div className="flex justify-between items-center mb-4">
             <span className="font-semibold">Total:</span>
-            <span className="font-semibold">${total.toFixed(2)}</span>
+            <span className="font-semibold">{total.toFixed(2)} RON</span>
           </div>
           <Link
             href="/cart"

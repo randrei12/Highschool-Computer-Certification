@@ -1,27 +1,26 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import Image from "next/image"
-import { productsCollection } from "@/lib/mongodb"
+import { productsCollection, Product } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 import { Input } from "@/components/ui/input"
 import { ImageUpload } from "./imageUpload"
 
-interface Product {
-    id: number
-    name: string
-    price: number
-    description: string
-    images: string[]
-}
-
 async function productAction(formData: FormData, id: string) {
-    console.log((new Date()).toString());
-    const formDataArray = Array.from(formData.entries()).map(([key, value]) => ({ key, value: value.toString() }));
-    console.log(formDataArray);
+    // console.log((new Date()).toString());
+    // const formDataArray = Array.from(formData.entries()).map(([key, value]) => ({ key, value: value.toString() }));
+    // console.log(formDataArray);
 
-    return new Response(undefined, { status: 204 });
+    const name = formData.get("name")!.toString();
+    const price = +formData.get("price")!.toString();
+    const description = formData.get("description")!.toString();
+    const images = JSON.parse(formData.get("images")!.toString());
 
+    if (id === "new") await productsCollection.insertOne({ name, price, description, images, _id: new ObjectId() });
+    else await productsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { name, price, description, images } });
+
+    redirect("/dashboard");
 }
 
 export default async function ProductForm({ params: { id } }: { params: { id: string } }) {

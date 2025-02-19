@@ -12,8 +12,6 @@ export default async function DashboardPage() {
             price: 1
         }
     }).toArray();
-    console.log(products);
-
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -55,9 +53,9 @@ function Product({
             className="flex items-center justify-between bg-white p-4 rounded-md shadow"
         >
             <span>
-                {product.name} - ${product.price.toFixed(2)}
+                {product.name} - {product.price.toFixed(2)} RON
             </span>
-            <div>
+            <div className="flex">
                 <Link href={`/dashboard/product/${id}`} className="text-blue-500 hover:text-blue-700 mr-2">
                     <Edit size={20} />
                 </Link>

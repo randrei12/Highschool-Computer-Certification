@@ -31,7 +31,7 @@ export default function OrderList() {
             </span>
           </div>
           <p className="text-gray-600">{order.customerName}</p>
-          <p className="text-gray-800 font-medium">Total: ${order.total.toFixed(2)}</p>
+          <p className="text-gray-800 font-medium">Total: {order.total.toFixed(2)} RON</p>
         </li>
       ))}
     </ul>

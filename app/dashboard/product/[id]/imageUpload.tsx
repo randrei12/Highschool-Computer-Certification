@@ -39,11 +39,11 @@ function SortableImage({ url, onDelete, onUpload }: SortableImageProps) {
                     type="button"
                 >
                     <Camera className="w-8 h-8" />
-                    <span className="text-sm">Add Image</span>
+                    <span className="text-sm">Adaugă Imagine</span>
                 </button>
             )}
         </div>
-    )
+    );
 }
 
 export function ImageUpload({ images = [], onChange = console.log, maxImages = 8 }: ImageUploadProps) {

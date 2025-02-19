@@ -27,7 +27,7 @@ export default function CartContents() {
             />
             <div className="flex-grow">
               <h3 className="font-semibold">{item.name}</h3>
-              <p className="text-gray-600">${item.price.toFixed(2)}</p>
+              <p className="text-gray-600">{item.price.toFixed(2)} RON</p>
               <div className="flex items-center mt-2">
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -45,7 +45,7 @@ export default function CartContents() {
               </div>
             </div>
             <div className="text-right">
-              <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+              <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} RON</p>
               <button onClick={() => removeFromCart(item.id)} className="text-red-500 hover:text-red-700 mt-2">
                 <X size={20} />
               </button>
@@ -54,7 +54,7 @@ export default function CartContents() {
         ))}
       </div>
       <div className="mt-8 text-right">
-        <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
+        <p className="text-xl font-bold">Total: {total.toFixed(2)} RON</p>
       </div>
     </div>
   )
