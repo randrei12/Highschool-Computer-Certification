@@ -3,11 +3,11 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useCart } from "../contexts/CartContext"
+import { useCart } from "@/hooks/use-cart"
 import { useRouter } from "next/navigation"
 
 export default function CheckoutForm() {
-    const { cart, clearCart } = useCart()
+    const { cart, total, clearCart } = useCart()
     const router = useRouter()
     const [formData, setFormData] = useState({
         firstName: "",
@@ -18,8 +18,6 @@ export default function CheckoutForm() {
         country: "",
         zipCode: "",
     })
-
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target

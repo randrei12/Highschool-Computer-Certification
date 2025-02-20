@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { useCart } from "../contexts/CartContext"
+import { useCart } from "@/hooks/use-cart"
 import { Product } from "@/lib/mongodb"
 
 export default function ProductDetails({ product }: { product: Product }) {

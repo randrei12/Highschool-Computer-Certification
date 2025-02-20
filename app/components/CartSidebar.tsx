@@ -1,14 +1,12 @@
 "use client"
 
-import { useCart } from "../contexts/CartContext"
+import { useCart } from "@/hooks/use-cart"
 import Image from "next/image"
 import { X, Plus, Minus } from "lucide-react"
 import Link from "next/link"
 
 export default function CartSidebar() {
-  const { cart, removeFromCart, updateQuantity, isCartOpen, setIsCartOpen } = useCart()
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const { total, cart, removeFromCart, updateQuantity, isCartOpen, setIsCartOpen } = useCart()
 
   if (!isCartOpen) return null
 

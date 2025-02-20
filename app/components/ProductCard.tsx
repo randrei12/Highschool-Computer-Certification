@@ -4,7 +4,7 @@ import type React from "react"
 
 import Image from "next/image"
 import Link from "next/link"
-import { useCart } from "../contexts/CartContext"
+import { useCart } from "@/hooks/use-cart"
 import { Product } from "@/lib/mongodb"
 
 export default function ProductCard({ product }: { product: Product }) {
