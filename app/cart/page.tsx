@@ -4,19 +4,24 @@ import Link from "next/link"
 import { Product, productsCollection } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export default async function CartPage() {
-    const products = await (async () => {
+export default async function CartPage({
+    products
+} : {
+    products: Record<string, Product> | undefined
+}) {
+    const productsObj = await (async () => {
         const cookie = await cookies();
         const cartCookie = cookie.get("cart");
 
         if (cartCookie) {
-            const entries = Object.keys(JSON.parse(cartCookie.value)).map(key => new ObjectId(key));
+            const entries = Object.keys(JSON.parse(cartCookie.value)[0]).map(key => new ObjectId(key));
             const products = await productsCollection.find({ _id: { $in: entries } }).toArray();
     
             const productsObj: Record<string, Product> = {};
             
             for (const product of products) {
-                productsObj[product._id.toString()] = product;
+                product._id = product._id.toString() as any;
+                productsObj[product._id as any] = product;
             }
     
             return productsObj;
@@ -26,7 +31,7 @@ export default async function CartPage() {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
-            <CartContents products={products} />
+            <CartContents products={productsObj} />
             <div className="mt-8 flex justify-end">
                 <Link
                     href="/checkout"

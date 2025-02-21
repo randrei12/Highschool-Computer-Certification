@@ -10,13 +10,7 @@ export default function ProductDetails({ product }: { product: Product }) {
     const { addToCart } = useCart();
 
     const handleAddToCart = () => {
-        addToCart({
-            id: product._id,
-            name: product.name,
-            price: product.price,
-            image: product.images[0],
-            quantity: 1,
-        });
+        addToCart(product._id.toString())
     };
 
     return (

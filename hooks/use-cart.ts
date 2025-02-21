@@ -13,7 +13,8 @@ export const useCart = create<{
     addToCart(...items: string[]): void,
     removeFromCart(...items: string[]): void,
     setCart(cart: CartItem, total: number): void,
-    deleteFromCart(id: string): void
+    deleteFromCart(id: string): void,
+    emptyCart(): void
 }>((set, get) => ({
     cart: {},
     total: 0,
@@ -28,7 +29,7 @@ export const useCart = create<{
         }
         
         set({
-            cart: newItems,
+            cart: {...newItems},
             total: newTotal
         });
 
@@ -41,11 +42,15 @@ export const useCart = create<{
 
         for (const item of items) {
             newItems[item] = (newItems[item] || 0) - 1;
-            newTotal -= 1;
+            if (newItems[item] <= 0) {
+                delete newItems[item];
+            } else {
+                newTotal -= 1;
+            }
         }
-        
+
         set({
-            cart: newItems,
+            cart: {...newItems},
             total: newTotal
         });
 
@@ -58,10 +63,10 @@ export const useCart = create<{
         });
         saveCookie(newCart, total);
     },
-    deleteFromCart(id, amount = 1) {
+    deleteFromCart(id) {
         const { cart, total } = get();
         const { [id]: target, ...rest } = cart;
-        const newTotal = total - (amount || 0);
+        const newTotal = total - target;
 
         set({ cart: rest, total: newTotal });
         saveCookie(rest, newTotal);

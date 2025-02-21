@@ -12,7 +12,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault()
-        addToCart({ ...product, quantity: 1 })
+        addToCart(product._id.toString());
     }
 
     return (

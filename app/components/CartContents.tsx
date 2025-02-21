@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { Plus, Minus, X } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
-import { useMemo, useRef } from "react"
+import { useMemo } from "react"
 import { Product } from "@/lib/mongodb"
 
 export default function CartContents({
