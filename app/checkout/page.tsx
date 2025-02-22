@@ -2,31 +2,47 @@ import { cookies } from "next/headers";
 import CheckoutForm from "../components/CheckoutForm"
 import { Product, productsCollection } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { redirect } from "next/navigation";
 
 export default async function CheckoutPage() {
-    const products = await (async () => {
+    const total = await (async () => {
         const cookie = await cookies();
         const cartCookie = cookie.get("cart");
 
-        if (cartCookie) {
-            const entries = Object.keys(JSON.parse(cartCookie.value)[0]).map(key => new ObjectId(key));
-            const products = await productsCollection.find({ _id: { $in: entries } }).toArray();
+        let total = 0;
 
-            const productsObj: Record<string, Product> = {};
+        if (cartCookie) {
+            const cartItems: Record<string, number> = JSON.parse(cartCookie.value)[0];
+            const entries = Object.keys(cartItems).map(key => new ObjectId(key));
+            const products = await productsCollection.find({
+                _id: {
+                    $in: entries
+                }
+            }, {
+                projection: {
+                    price: 1
+                }
+            }).toArray();
 
             for (const product of products) {
-                product._id = product._id.toString() as any;
-                productsObj[product._id as any] = product;
+                const id = product._id.toString();
+                total += cartItems[id] * product.price;
             }
 
-            return productsObj;
-        } else return {};
+        }
+
+        return total;
     })();
+
+    if (total === 0) {
+        redirect("/cart");
+        return;
+    }
 
     return (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-            <CheckoutForm products={products} />
+            <h1 className="text-3xl font-bold mb-8">Finalizează Comanda</h1>
+            <CheckoutForm total={total} />
         </div>
     );
 }

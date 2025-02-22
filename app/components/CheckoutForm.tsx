@@ -8,11 +8,11 @@ import { Input } from "@/components/ui/input"
 import { Product } from "@/lib/mongodb"
 
 export default function CheckoutForm({
-    products
+    total
 }: {
-    products: Record<string, Product>
+    total: number
 }) {
-    const { cart, emptyCart } = useCart();
+    const { emptyCart } = useCart();
     const router = useRouter()
     const [formData, setFormData] = useState({
         firstName: "",
@@ -23,20 +23,21 @@ export default function CheckoutForm({
         country: "",
         zipCode: "",
     });
-    
-    const total = useMemo(() => Object.keys(cart).reduce((sum, id) => {
-        const { price } = products[id];
-        return sum + cart[id] * price;
-    }, 0), []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         const data = new FormData(e.target as any);
+
+        const res = await fetch("/api/checkout", {
+            method: "POST",
+            body: data,
+        });
+        return;
         console.log(data);
         
         emptyCart()

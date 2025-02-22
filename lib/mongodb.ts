@@ -13,6 +13,18 @@ export type Product = {
 export const productsCollection = db.collection<Product>("products");
 
 export type Order = {
-    
+    firstName: string,
+    lastName: string,
+    email: string,
+    address: string,
+    city: string,
+    zipCode: number,
+    products: Array<{
+        id: string,
+        name: string,
+        quantity: number,
+        price: number
+    }>,
+    total: number
 }
-export const ordersCollection = db.collection("orders");
+export const ordersCollection = db.collection<Order>("orders");

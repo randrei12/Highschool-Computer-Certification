@@ -4,11 +4,7 @@ import Link from "next/link"
 import { Product, productsCollection } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export default async function CartPage({
-    products
-} : {
-    products: Record<string, Product> | undefined
-}) {
+export default async function CartPage() {
     const productsObj = await (async () => {
         const cookie = await cookies();
         const cartCookie = cookie.get("cart");
@@ -30,16 +26,18 @@ export default async function CartPage({
     
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
+            <h1 className="text-3xl font-bold mb-8">Coșul meu</h1>
             <CartContents products={productsObj} />
-            <div className="mt-8 flex justify-end">
-                <Link
-                    href="/checkout"
-                    className="bg-gray-900 text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
-                >
-                    Go to Checkout
-                </Link>
-            </div>
+            {productsObj && Object.keys(productsObj).length > 0 && (
+                <div className="mt-8 flex justify-end">
+                    <Link
+                        href="/checkout"
+                        className="bg-gray-900 text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300"
+                    >
+                        Finalizează comanda
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }
