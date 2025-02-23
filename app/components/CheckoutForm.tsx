@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { useCart } from "@/hooks/use-cart"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
-import { Product } from "@/lib/mongodb"
 
 export default function CheckoutForm({
     total
@@ -37,11 +36,13 @@ export default function CheckoutForm({
             method: "POST",
             body: data,
         });
-        return;
-        console.log(data);
         
-        emptyCart()
-        router.push("/") // Redirect to home page after order
+        if (res.ok) {
+            emptyCart()
+            router.push("/") // Redirect to home page after order
+        } else {
+            alert("A apărut o eroare.");
+        }
     }
 
     return (

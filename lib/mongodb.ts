@@ -28,3 +28,17 @@ export type Order = {
     total: number
 }
 export const ordersCollection = db.collection<Order>("orders");
+
+export async function getProductsByIds(ids: (ObjectId | string)[], projection?: Record<string, 1>) {
+    const $ids = ids.map(id => new ObjectId(id));
+    
+    const products = await productsCollection.find({
+        _id: {
+            $in: $ids
+        }
+    }, {
+        projection
+    }).toArray();
+
+    return products;
+}

@@ -1,8 +1,7 @@
+import { getProductsByIds, Product } from "@/lib/mongodb";
 import { cookies } from "next/headers";
-import CartContents from "../components/CartContents"
-import Link from "next/link"
-import { Product, productsCollection } from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import Link from "next/link";
+import CartContents from "../components/CartContents";
 
 export default async function CartPage() {
     const productsObj = await (async () => {
@@ -10,8 +9,8 @@ export default async function CartPage() {
         const cartCookie = cookie.get("cart");
 
         if (cartCookie) {
-            const entries = Object.keys(JSON.parse(cartCookie.value)[0]).map(key => new ObjectId(key));
-            const products = await productsCollection.find({ _id: { $in: entries } }).toArray();
+            const entries = Object.keys(JSON.parse(cartCookie.value)[0]);
+            const products = await getProductsByIds(entries);
     
             const productsObj: Record<string, Product> = {};
             

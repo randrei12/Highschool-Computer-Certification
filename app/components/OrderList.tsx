@@ -1,40 +1,34 @@
-"use client"
+import { Order } from "@/lib/mongodb"
+import { WithId } from "mongodb";
 
-import { useState } from "react"
-
-// This would typically come from your API
-const initialOrders = [
-  { id: 1, customerName: "John Doe", total: 59.98, status: "Pending" },
-  { id: 2, customerName: "Jane Smith", total: 129.97, status: "Shipped" },
-  { id: 3, customerName: "Bob Johnson", total: 89.99, status: "Delivered" },
-]
-
-export default function OrderList() {
-  const [orders] = useState(initialOrders)
-
-  return (
-    <ul className="space-y-4">
-      {orders.map((order) => (
-        <li key={order.id} className="bg-white p-4 rounded-md shadow">
-          <div className="flex justify-between items-center">
-            <span className="font-semibold">Order #{order.id}</span>
-            <span
-              className={`px-2 py-1 rounded ${
-                order.status === "Pending"
-                  ? "bg-yellow-200 text-yellow-800"
-                  : order.status === "Shipped"
-                    ? "bg-blue-200 text-blue-800"
-                    : "bg-green-200 text-green-800"
-              }`}
-            >
-              {order.status}
-            </span>
-          </div>
-          <p className="text-gray-600">{order.customerName}</p>
-          <p className="text-gray-800 font-medium">Total: {order.total.toFixed(2)} RON</p>
-        </li>
-      ))}
-    </ul>
-  )
+export default function OrderList({
+    orders
+}: {
+    orders: WithId<Order>[]
+}) {
+    return (
+        <ul className="space-y-4">
+            {orders.length > 0 ? orders.map(order => {
+                const id = order._id.toString();
+                
+                return (
+                    <li key={id} className="bg-white p-4 rounded-md shadow">
+                        <div className="flex justify-between items-center">
+                            <span className="font-semibold">Comanda #{id.toUpperCase()}</span>
+                        </div>
+                        <p className="text-gray-600">{order.firstName} {order.lastName}</p>
+                        <p className="text-gray-600">{order.email}</p>
+                        <p className="text-gray-600">{order.address} {order.zipCode}</p>
+                        <p className="text-gray-600">{order.city}</p>
+                        <br />
+                        {order.products.map(product => (
+                            <p className="text-gray-600">{product.quantity} &times; {product.name}: <span className="text-gray-800 font-medium">{product.quantity * product.price} RON</span> ({product.quantity} &times; {product.price} RON)</p>
+                        ))}
+                        <br />
+                        <p className="text-gray-800 font-medium">Total: {order.products.map(product => product.price * product.quantity).reduce((a, b) => a + b, 0)} RON</p>
+                    </li>
+                );
+            }) : <p className="text-center text-gray-500">Nu există comenzi</p>}
+        </ul>
+    );
 }
-

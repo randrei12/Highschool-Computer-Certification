@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import CheckoutForm from "../components/CheckoutForm"
-import { Product, productsCollection } from "@/lib/mongodb";
+import { getProductsByIds, Product, productsCollection } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
 
@@ -14,21 +14,14 @@ export default async function CheckoutPage() {
         if (cartCookie) {
             const cartItems: Record<string, number> = JSON.parse(cartCookie.value)[0];
             const entries = Object.keys(cartItems).map(key => new ObjectId(key));
-            const products = await productsCollection.find({
-                _id: {
-                    $in: entries
-                }
-            }, {
-                projection: {
-                    price: 1
-                }
-            }).toArray();
+            const products = await getProductsByIds(entries, {
+                price: 1
+            });
 
             for (const product of products) {
                 const id = product._id.toString();
-                total += cartItems[id] * product.price;
+                total += cartItems[id] * product.price; 
             }
-
         }
 
         return total;
@@ -46,4 +39,3 @@ export default async function CheckoutPage() {
         </div>
     );
 }
-
