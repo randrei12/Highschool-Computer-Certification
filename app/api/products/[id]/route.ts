@@ -17,9 +17,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
                 break;
             }
         }
-
-        console.log(productsIds, total);
-
+        
         cookie.set("cart", JSON.stringify([productsIds, total]), {
             path: "/",
             maxAge: 60 * 60 * 24 * 30,

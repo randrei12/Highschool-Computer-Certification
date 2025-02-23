@@ -1,17 +1,10 @@
-import type React from "react"
-import { useState, useEffect } from "react"
-import { redirect, useRouter } from "next/navigation"
-import Image from "next/image"
-import { productsCollection, Product } from "@/lib/mongodb"
-import { ObjectId } from "mongodb"
 import { Input } from "@/components/ui/input"
+import { productsCollection } from "@/lib/mongodb"
+import { ObjectId } from "mongodb"
+import { redirect } from "next/navigation"
 import { ImageUpload } from "./imageUpload"
 
 async function productAction(formData: FormData, id: string) {
-    // console.log((new Date()).toString());
-    // const formDataArray = Array.from(formData.entries()).map(([key, value]) => ({ key, value: value.toString() }));
-    // console.log(formDataArray);
-
     const name = formData.get("name")!.toString();
     const price = +formData.get("price")!.toString();
     const description = formData.get("description")!.toString();
