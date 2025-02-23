@@ -1,7 +1,7 @@
+import { Product as ProductType, productsCollection } from "@/lib/mongodb";
+import { Edit } from "lucide-react";
 import Link from "next/link";
 import OrderList from "../components/OrderList";
-import { Product as ProductType, ordersCollection, productsCollection } from "@/lib/mongodb";
-import { Edit } from "lucide-react";
 import { Delete } from "./delete";
 
 export default async function DashboardPage() {
@@ -13,7 +13,7 @@ export default async function DashboardPage() {
         }
     }).toArray();
 
-    const orders = await ordersCollection.find({}).toArray().then(orders => orders.map(order => ({ ...order, _id: order._id.toString() })));
+    
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -36,7 +36,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                     <h2 className="text-2xl font-bold mb-4">Comenzi</h2>
-                    <OrderList orders={orders as any} />
+                    <OrderList />
                 </div>
             </div>
         </div>

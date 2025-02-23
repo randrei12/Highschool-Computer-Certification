@@ -1,0 +1,3 @@
+nume: Cadru de Pat Metalic
+pret: 600
+descriere: Cadru de Pat, 160 x 200, Rezistenta 400 KG - Negru

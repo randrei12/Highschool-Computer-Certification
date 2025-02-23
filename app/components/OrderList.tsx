@@ -1,11 +1,8 @@
-import { Order } from "@/lib/mongodb"
-import { WithId } from "mongodb";
+import { ordersCollection } from "@/lib/mongodb";
 
-export default function OrderList({
-    orders
-}: {
-    orders: WithId<Order>[]
-}) {
+export default async function OrderList() {
+    const orders = await ordersCollection.find({}).toArray().then(orders => orders.map(order => ({ ...order, _id: order._id.toString() })));
+
     return (
         <ul className="space-y-4">
             {orders.length > 0 ? orders.map(order => {
@@ -28,7 +25,7 @@ export default function OrderList({
                         <p className="text-gray-800 font-medium">Total: {order.products.map(product => product.price * product.quantity).reduce((a, b) => a + b, 0)} RON</p>
                     </li>
                 );
-            }) : <p className="text-center text-gray-500">Nu există comenzi</p>}
+            }) : <p className="text-center text-gray-500">Nu există comenzi</p>}    
         </ul>
     );
 }
