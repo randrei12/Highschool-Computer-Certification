@@ -66,6 +66,7 @@ export const useCart = create<{
     deleteFromCart(id) {
         const { cart, total } = get();
         const { [id]: target, ...rest } = cart;
+        if (!target) return;
         const newTotal = total - target;
 
         set({ cart: rest, total: newTotal });

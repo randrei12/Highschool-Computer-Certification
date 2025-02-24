@@ -66,3 +66,5 @@ function Product({
         </li>
     );
 }
+
+export const revalidate = 0;

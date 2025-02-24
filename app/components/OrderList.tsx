@@ -9,7 +9,7 @@ export default async function OrderList() {
                 const id = order._id.toString();
                 
                 return (
-                    <li key={id} className="bg-white p-4 rounded-md shadow">
+                    <li key={`order-list-${id}`} className="bg-white p-4 rounded-md shadow">
                         <div className="flex justify-between items-center">
                             <span className="font-semibold">Comanda #{id.toUpperCase()}</span>
                         </div>

@@ -46,10 +46,10 @@ function SortableImage({ url, onDelete, onUpload }: SortableImageProps) {
     );
 }
 
-export function ImageUpload({ images = [], onChange = console.log, maxImages = 8 }: ImageUploadProps) {
+export function ImageUpload({ images = [], onChange, maxImages = 8 }: ImageUploadProps) {
     const [imgState, setImgState] = useState<string[]>(images);
     useEffect(() => {
-        onChange(imgState);
+        onChange?.(imgState);
     }, [imgState, onChange])
 
     const fileInputRef = useRef<HTMLInputElement>(null)

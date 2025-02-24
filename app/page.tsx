@@ -2,7 +2,15 @@ import { productsCollection } from "@/lib/mongodb";
 import ProductCard from "./components/ProductCard";
 
 const getProducts = async () => {
-    const products = (await productsCollection.find({}).toArray()).map(product => ({ ...product, _id: product._id.toString() }));
+    const products = (await productsCollection.find({}, {
+        projection: {
+            name: 1,
+            price: 1,
+            images: {
+                $slice: 1
+            }
+        }
+    }).toArray()).map(product => ({ ...product, _id: product._id.toString() }));
     return products;
 }
 
@@ -25,3 +33,4 @@ export default async function Home() {
     );
 }
 
+export const revalidate = 0;

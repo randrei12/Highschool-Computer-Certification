@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { Plus, Minus, X } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { Product } from "@/lib/mongodb"
 
 export default function CartContents({
@@ -11,15 +11,24 @@ export default function CartContents({
 }: {
     products: Record<string, Product> | undefined
 }) {
-    const { total, cart, removeFromCart, deleteFromCart, addToCart } = useCart();
+    const { cart, removeFromCart, deleteFromCart, addToCart } = useCart();
     const prices = useMemo(() => {
         const prices: Record<string, number> = {};
         Object.keys(cart).forEach(id => {
-            prices[id] = products![ id].price * cart[id];
+            if (!products?.[id]) return;
+            prices[id] = products[id].price * cart[id];
         }, [cart])
         return prices;
     }, [cart]);
     const totalPrice = useMemo(() => Object.values(prices).reduce((a, b) => a + b, 0), [prices]);
+
+    useEffect(() => {
+        Object.keys(cart).forEach(id => {
+            if (!products?.[id]) {
+                deleteFromCart(id);
+            }
+        });
+    }, [cart]);
 
     if (cart.length === 0) {
         return <p className="text-center text-gray-500">Your cart is empty</p>
@@ -28,7 +37,7 @@ export default function CartContents({
     return (
         <div>
             <div className="space-y-8">
-                {products && Object.keys(cart).map(id => (
+                {products && Object.keys(cart).map(id => products[id] &&(
                     <div key={id} className="flex items-center space-x-4 border-b pb-4">
                         <Image
                             src={products[id].images[0] || "/placeholder.svg"}
