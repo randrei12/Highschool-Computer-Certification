@@ -29,7 +29,7 @@ export type Order = {
 }
 export const ordersCollection = db.collection<Order>("orders");
 
-export async function getProductsByIds(ids: (ObjectId | string)[], projection?: Record<string, 1>) {
+export async function getProductsByIds(ids: (ObjectId | string)[], projection?: Partial<Record<keyof Product, 1 | Record<string, any>>>) {
     const $ids = ids.map(id => new ObjectId(id));
     
     const products = await productsCollection.find({

@@ -16,44 +16,31 @@ async function productAction(formData: FormData, id: string) {
     redirect("/dashboard");
 }
 
-export default async function ProductForm({ params: { id } }: { params: { id: string } }) {
-    const product = id !== "new" ? await productsCollection.findOne({ _id: new ObjectId(id) }) : null;
+export default async function ProductForm({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+
+    let product: { imagesLength: number, name: string, price: number, description: string } | null = null;
+    if (id !== "new") {
+        product = await productsCollection.aggregate([
+            {
+                $match: {
+                    _id: new ObjectId(id)
+                }
+            },
+            {
+                $project: {
+                    imagesLength: {
+                        $size: "$images"
+                    },
+                    name: 1,
+                    price: 1,
+                    description: 1
+                }
+            }
+        ]).next() as any;
+    }
+    
     if (!product && id !== "new") return <h1>Produsul nu a fost găsit.</h1>;
-
-    // const router = useRouter()
-    // const [product, setProduct] = useState<Product>({
-    //     id: 0,
-    //     name: "",
-    //     price: 0,
-    //     description: "",
-    //     images: [],
-    // })
-
-    // useEffect(() => {
-    //     if (params.id !== "new") {
-    //         // Fetch product data from API
-    //         // This is a placeholder. Replace with actual API call.
-    //         const fetchProduct = async () => {
-    //             const res = await fetch(`/api/products/${params.id}`)
-    //             const data = await res.json()
-    //             setProduct(data)
-    //         }
-    //         fetchProduct()
-    //     }
-    // }, [params.id])
-
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    //     const { name, value } = e.target
-    //     setProduct((prev) => ({ ...prev, [name]: value }))
-    // }
-
-    // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const files = e.target.files
-    //     if (files) {
-    //         const newImages = Array.from(files).map((file) => URL.createObjectURL(file))
-    //         setProduct((prev) => ({ ...prev, images: [...prev.images, ...newImages] }))
-    //     }
-    // }
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -102,37 +89,11 @@ export default async function ProductForm({ params: { id } }: { params: { id: st
                         required
                     />
                 </div>
-                {/* <div>
-                    <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-1">
-                        Imagini
-                    </label>
-                    <Input
-                        type="file"
-                        id="description"
-                        name="description"
-                        className="rounded-lg border-gray-300 shadow-sm focus:ring-opacity-50 h-10 bg-white"
-                        accept="image/*"
-                        multiple
-                        required
-                    />
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                    {product?.images.map((image, index) => (
-                        <Image
-                            key={index}
-                            src={`data:image/png;base64,${image}`}
-                            alt={`Imaginea ${index + 1}`}
-                            width={100}
-                            height={100}
-                            className="object-cover rounded"
-                        />
-                    ))}
-                </div> */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Imagini
                     </label>
-                    <ImageUpload images={product?.images} />
+                    <ImageUpload id={id} imagesLength={product?.imagesLength} />
                 </div>
 
                 <button
