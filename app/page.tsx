@@ -6,9 +6,9 @@ const getProducts = async () => {
         projection: {
             name: 1,
             price: 1,
-            images: {
-                $slice: 1
-            }
+            // images: {
+            //     $slice: 1
+            // }
         }
     }).toArray()).map(product => ({ ...product, _id: product._id.toString() }));
     return products;
