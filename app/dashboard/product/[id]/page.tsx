@@ -3,15 +3,32 @@ import { productsCollection } from "@/lib/mongodb"
 import { ObjectId } from "mongodb"
 import { redirect } from "next/navigation"
 import { ImageUpload } from "./imageUpload"
+import { revalidatePath } from "next/cache"
 
 async function productAction(formData: FormData, id: string) {
     const name = formData.get("name")!.toString();
     const price = +formData.get("price")!.toString();
     const description = formData.get("description")!.toString();
-    const images = JSON.parse(formData.get("images")!.toString());
+    const images: string[] = JSON.parse(formData.get("images")!.toString());
 
     if (id === "new") await productsCollection.insertOne({ name, price, description, images, _id: new ObjectId() });
-    else await productsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { name, price, description, images } });
+    else {
+        const dbImages = await productsCollection.findOne({ _id: new ObjectId(id) })?.then(product => product?.images);
+        if (!dbImages) return new Response(null, { status: 404 });
+
+        let setImages = [];
+        for (const image of images) {
+            if (image.startsWith("/api/image")) {
+                const index = image.substring(image.lastIndexOf("/") + 1);
+                setImages.push(dbImages[+index]);
+            } else {
+                setImages.push(image);
+            }
+        }
+
+        await productsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { name, price, description, images: setImages } });
+        revalidatePath(`/api/image/${id}/[index]`);
+    }
 
     redirect("/dashboard");
 }

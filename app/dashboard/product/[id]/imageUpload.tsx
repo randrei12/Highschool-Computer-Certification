@@ -46,6 +46,7 @@ function SortableImage({
                         <button
                             onClick={onDelete}
                             className="p-1.5 bg-white rounded-full text-red-500 hover:text-red-700 transition-colors duration-200"
+                            type="button"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -79,7 +80,11 @@ export function ImageUpload({
     const [imgState, setImgState] = useState<string[]>([]);
     useEffect(() => {
         onChange?.(imgState);
-    }, [imgState, onChange])
+    }, [imgState, onChange]);
+
+    useEffect(() => {
+        setImgState(Array.from({ length: imagesLength }).map((_, index) => `/api/image/${id}/${index}`));
+    }, []);
 
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [uploadIndex, setUploadIndex] = useState<number | null>(null)
@@ -110,29 +115,28 @@ export function ImageUpload({
                     fileInputRef.current.value = "";
                 }
             }
-
         }
-    }, [imgState, maxImages, uploadIndex])
+    }, [imgState, maxImages, uploadIndex]);
 
     const handleDelete = useCallback(
         (index: number) => {
             setImgState(imgState.filter((_, i) => i !== index))
         },
         [imgState],
-    )
+    );
 
     const triggerFileInput = useCallback((index: number) => {
         setUploadIndex(index)
         fileInputRef.current?.click()
-    }, [])
+    }, []);
 
     return (
         <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {Array.from({ length: maxImages }).map((_, index) => (
+                {Array.from({ length: maxImages }).map((_, index) => (                   
                     <SortableImage
                         // key={imgState[index] || `empty-${index}`}
-                        url={(index < imagesLength) ? `/api/image/${id}/${index}` : (imgState[index - imagesLength] || null)}
+                        url={(imgState[index] || null)}
                         onDelete={() => handleDelete(index)}
                         onUpload={() => triggerFileInput(index)}
                     />
