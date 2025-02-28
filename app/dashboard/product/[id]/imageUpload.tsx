@@ -132,7 +132,7 @@ export function ImageUpload({
                 {Array.from({ length: maxImages }).map((_, index) => (
                     <SortableImage
                         // key={imgState[index] || `empty-${index}`}
-                        url={(index < imagesLength) ? `/api/image/${id}/${index}` : null}
+                        url={(index < imagesLength) ? `/api/image/${id}/${index}` : (imgState[index - imagesLength] || null)}
                         onDelete={() => handleDelete(index)}
                         onUpload={() => triggerFileInput(index)}
                     />

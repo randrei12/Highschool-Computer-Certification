@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/hooks/use-cart"
 import { Product } from "@/lib/mongodb"
@@ -27,13 +26,11 @@ export default function ProductCard({ product }: { product: Product }) {
     return (
         <Link href={`/product/${product._id}`} className="group">
             <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
-                <Image
+                <img
                     src={src}
                     onError={() => setSrc("/placeholder.svg")}
                     onLoad={() => setImageLoaded(true)}
                     alt={product.name}
-                    width={300}
-                    height={300}
                     className="w-full h-64 object-cover"
                     ref={ref}
                     style={{ display: imageLoaded ? "block" : "none" }}
