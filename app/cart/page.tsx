@@ -12,10 +12,7 @@ export default async function CartPage() {
             const entries = Object.keys(JSON.parse(cartCookie.value)[0]);
             const products = await getProductsByIds(entries, {
                 name: 1,
-                price: 1,
-                images: {
-                    $slice: 1
-                }
+                price: 1
             });
     
             const productsObj: Record<string, Product> = {};

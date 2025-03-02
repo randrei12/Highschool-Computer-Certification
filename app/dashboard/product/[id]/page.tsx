@@ -4,6 +4,15 @@ import { ObjectId } from "mongodb"
 import { redirect } from "next/navigation"
 import { ImageUpload } from "./imageUpload"
 import { revalidatePath } from "next/cache"
+import sharp from "sharp";
+
+async function generatePreview(imgBase64: string) {
+    const base64 = imgBase64.substring(imgBase64.indexOf(",") + 1);
+    const buffer = Buffer.from(base64, "base64");
+
+    const resBuffer = await sharp(buffer).resize(300, null).toBuffer();
+    return `data:image/png;base64,${resBuffer.toString("base64")}`;
+}
 
 async function productAction(formData: FormData, id: string) {
     const name = formData.get("name")!.toString();
@@ -11,7 +20,14 @@ async function productAction(formData: FormData, id: string) {
     const description = formData.get("description")!.toString();
     const images: string[] = JSON.parse(formData.get("images")!.toString());
 
-    if (id === "new") await productsCollection.insertOne({ name, price, description, images, _id: new ObjectId() });
+    if (id === "new") await productsCollection.insertOne({
+        name,
+        price,
+        description,
+        images,
+        preview: await generatePreview(images[0]),
+        _id: new ObjectId()
+    });
     else {
         const dbImages = await productsCollection.findOne({ _id: new ObjectId(id) })?.then(product => product?.images);
         if (!dbImages) return new Response(null, { status: 404 });
@@ -26,7 +42,19 @@ async function productAction(formData: FormData, id: string) {
             }
         }
 
-        await productsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { name, price, description, images: setImages } });
+        const preview = await generatePreview(setImages[0]);
+        
+        await productsCollection.updateOne({
+            _id: new ObjectId(id)
+        }, {
+            $set: {
+                name,
+                price,
+                description,
+                preview,
+                images: setImages,
+            }
+        });
         revalidatePath(`/api/image/${id}/[index]`);
     }
 

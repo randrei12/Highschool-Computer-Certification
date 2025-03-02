@@ -39,12 +39,9 @@ export default function CartContents({
             <div className="space-y-8">
                 {products && Object.keys(cart).map(id => products[id] &&(
                     <div key={id} className="flex items-center space-x-4 border-b pb-4">
-                        <Image
-                            src={products[id].images[0] || "/placeholder.svg"}
-                            alt={products[id].name}
-                            width={80}
-                            height={80}
-                            className="rounded-md"
+                        <img
+                            src={`/api/image/${id}/preview`}
+                            className="rounded-md w-20 h-20 object-cover"
                         />
                         <div className="flex-grow">
                             <h3 className="font-semibold">{products[id].name}</h3>

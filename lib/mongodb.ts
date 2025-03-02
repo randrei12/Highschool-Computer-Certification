@@ -8,6 +8,7 @@ export type Product = {
     name: string,
     description: string,
     price: number,
+    preview: string,
     images: string[]
 }
 export const productsCollection = db.collection<Product>("products");

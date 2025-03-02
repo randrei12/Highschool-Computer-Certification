@@ -8,7 +8,6 @@ import { Camera } from "lucide-react"
 
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
-    const [src, setSrc] = useState(`/api/image/${product._id}/0`);
     const [imageLoaded, setImageLoaded] = useState(false);
     const ref = useRef<HTMLImageElement>(null);
 
@@ -27,8 +26,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <Link href={`/product/${product._id}`} className="group">
             <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
                 <img
-                    src={src}
-                    onError={() => setSrc("/placeholder.svg")}
+                    src={`/api/image/${product._id}/preview`}
                     onLoad={() => setImageLoaded(true)}
                     alt={product.name}
                     className="w-full h-64 object-cover"

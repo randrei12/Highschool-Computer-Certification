@@ -1,11 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
-import { useCart } from "@/hooks/use-cart"
-import { Product } from "@/lib/mongodb"
+import { useState } from "react";
+import { useCart } from "@/hooks/use-cart";
+import { Product } from "@/lib/mongodb";
 
-export default function ProductDetails({ product }: { product: Product }) {
+export default function ProductDetails({
+    product,
+    imagesLength
+}: {
+    product: Product,
+    imagesLength: number
+}) {
     const [currentImage, setCurrentImage] = useState(0);
     const { addToCart } = useCart();
 
@@ -17,25 +22,23 @@ export default function ProductDetails({ product }: { product: Product }) {
         <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-4">
                 <div className="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden">
-                    <Image
-                        src={product.images[currentImage] || "/placeholder.svg"}
-                        alt={product.name}
+                    <img
+                        src={`/api/image/${product._id.toString()}/${currentImage}`}
                         width={600}
                         height={600}
                         className="w-full aspect-square object-center object-cover"
                     />
                 </div>
                 <div className="grid grid-cols-4 gap-4">
-                    {product.images.map((image, index) => (
+                    {Array.from({ length: imagesLength }).map((_, index) => (
                         <button
                             key={index}
                             onClick={() => setCurrentImage(index)}
                             className={`aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden ${currentImage === index ? "ring-2 ring-indigo-500" : ""
                                 }`}
                         >
-                            <Image
-                                src={image || "/placeholder.svg"}
-                                alt={`${product.name} ${index + 1}`}
+                            <img
+                                src={`/api/image/${product._id.toString()}/${index}`}
                                 width={150}
                                 height={150}
                                 className="w-full aspect-square object-center object-cover"
