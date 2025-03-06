@@ -135,7 +135,7 @@ export function ImageUpload({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {Array.from({ length: maxImages }).map((_, index) => (                   
                     <SortableImage
-                        // key={imgState[index] || `empty-${index}`}
+                        key={index}
                         url={(imgState[index] || null)}
                         onDelete={() => handleDelete(index)}
                         onUpload={() => triggerFileInput(index)}
